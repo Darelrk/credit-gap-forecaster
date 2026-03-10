@@ -32,17 +32,17 @@ class LSTMDataProcessor:
         """Inverses the scaling to return values to base magnitude."""
         return self.scaler.inverse_transform(data)
         
-    def create_sequences(self, data: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def create_sequences(self, data: np.ndarray, target_col_idx: int = 0) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Transforms a 1D or 2D array into 3D sequences of shape (samples, window_size, features).
-        Returns X (features) and y (targets).
+        Transforms a 2D array into 3D sequences of shape (samples, window_size, features).
+        Returns X (all features) and y (target column only).
         """
         X, y = [], []
-        # length of data must be at least window_size + 1 to form 1 sequence
         for i in range(len(data) - self.window_size):
             X.append(data[i : (i + self.window_size)])
-            y.append(data[i + self.window_size])
-        return np.array(X), np.array(y)
+            # Target is the next value of the specific column (usually Credit Gap)
+            y.append(data[i + self.window_size, target_col_idx])
+        return np.array(X), np.array(y).reshape(-1, 1)
 
 
 class AttentionLayer(nn.Module):
@@ -117,24 +117,44 @@ class LSTMTrainer:
             
         return loss.item()
 
-    def predict_future(self, last_sequence: np.ndarray, steps: int = 4) -> np.ndarray:
-        """Autoregressive prediction for future steps."""
+    def predict_future(self, last_sequence: np.ndarray, steps: int = 4, scenario_input: np.ndarray = None) -> np.ndarray:
+        """
+        Autoregressive prediction for future steps.
+        If scenario_input is provided, it must be shape (steps, num_features - 1) 
+        containing the macro variables for each future step.
+        """
         self.model.eval()
         predictions = []
         
-        # current_seq shape needs to be (1, window_size, 1)
-        current_seq = last_sequence.copy().reshape(1, -1, 1)
+        # current_seq shape: (1, window_size, num_features)
+        current_seq = last_sequence.copy()
+        if len(current_seq.shape) == 2:
+            current_seq = current_seq.reshape(1, current_seq.shape[0], current_seq.shape[1])
+        
+        num_features = current_seq.shape[2]
         
         with torch.no_grad():
-            for _ in range(steps):
+            for i in range(steps):
                 inputs = torch.tensor(current_seq, dtype=torch.float32)
-                pred = self.model(inputs) # shape: (1, 1)
+                pred = self.model(inputs) # Expected shape (1, 1)
                 
-                predictions.append(pred.item())
+                pred_val = pred.item()
+                predictions.append(pred_val)
                 
-                # Roll sequence: remove first, append prediction to the end
-                pred_expanded = pred.unsqueeze(1) # shape: (1, 1, 1)
-                current_seq = np.append(current_seq[:, 1:, :], pred_expanded.numpy(), axis=1)
+                # Prepare the next feature vector
+                # If we have scenario inputs (macro variables), use them.
+                # Otherwise, keep macro variables constant at last known value.
+                if scenario_input is not None and i < len(scenario_input):
+                    # Combine predicted gap with provided macro variables
+                    next_features = np.concatenate([[pred_val], scenario_input[i]])
+                else:
+                    # Naive: keep macro features from the last timestep of current_seq
+                    last_macro = current_seq[0, -1, 1:]
+                    next_features = np.concatenate([[pred_val], last_macro])
+                
+                # Roll sequence
+                next_features = next_features.reshape(1, 1, num_features)
+                current_seq = np.concatenate([current_seq[:, 1:, :], next_features], axis=1)
                 
         return np.array(predictions).reshape(-1, 1)
         
@@ -159,7 +179,7 @@ class LSTMHyperOptimizer:
         dropout = trial.suggest_float("dropout", 0.1, 0.5)
         epochs = 50 
 
-        model = LSTMModel(input_size=1, hidden_size=hidden_size, num_layers=num_layers, output_size=1, dropout=dropout)
+        model = LSTMModel(input_size=X_train.shape[2], hidden_size=hidden_size, num_layers=num_layers, output_size=1, dropout=dropout)
         trainer = LSTMTrainer(model=model, lr=lr)
         trainer.train_step(X_train, y_train, epochs=epochs)
 
@@ -174,7 +194,7 @@ class LSTMHyperOptimizer:
     def run_study(self, data):
         # Preprocessing minimal untuk study
         processor = LSTMDataProcessor(window_size=4)
-        scaled_data = processor.fit_transform(data.reshape(-1, 1))
+        scaled_data = processor.fit_transform(data)
         X, y = processor.create_sequences(scaled_data)
         
         # Split 80/20
@@ -208,7 +228,7 @@ class TimeSeriesCrossValidator:
         Menjalankan K-Fold Cross Validation dan mengembalikan rata-rata metrik.
         """
         processor = LSTMDataProcessor(window_size=4)
-        scaled_data = processor.fit_transform(data.reshape(-1, 1))
+        scaled_data = processor.fit_transform(data)
         X, y = processor.create_sequences(scaled_data)
         
         fold_results = []
@@ -260,7 +280,7 @@ if __name__ == "__main__":
         scaled = processor.fit_transform(data.reshape(-1, 1))
         X, y = processor.create_sequences(scaled)
         
-        model = LSTMModel()
+        model = LSTMModel(input_size=1)
         trainer = LSTMTrainer(model)
         
         loss = trainer.train_step(X[:10], y[:10], epochs=5)

@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 class XGBForecaster:
-    """Implementasi peramalan Credit Gap menggunakan Gradient Boosting (XGBoost)."""
+    """Implementasi peramalan Credit Gap menggunakan Gradient Boosting (XGBoost) berbasis Multivariat."""
     
     def __init__(self, lags=4, params=None):
         self.lags = lags
@@ -20,58 +20,95 @@ class XGBForecaster:
         }
         self.model = None
         
-    def prepare_features(self, series: pd.Series) -> (pd.DataFrame, pd.Series):
+    def prepare_features(self, df_or_series) -> (pd.DataFrame, pd.Series):
         """
-        Merubah deret waktu 1D menjadi fitur tabular (Lag 1 s.d Lag N).
+        Merubah dataframe multivariat menjadi fitur tabular (Lag 1 s.d Lag N) untuk setiap kolom fitur.
         """
-        df = pd.DataFrame(series)
-        df.columns = ['target']
-        
-        # Buat kolom lag
-        for i in range(1, self.lags + 1):
-            df[f'lag_{i}'] = df['target'].shift(i)
+        if isinstance(df_or_series, pd.Series):
+            df = pd.DataFrame(df_or_series)
+            df.columns = ['target']
+            target_col = 'target'
+        else:
+            df = df_or_series.copy()
+            if isinstance(df, np.ndarray):
+                df = pd.DataFrame(df)
+            # Assuming first column is target if not specified
+            target_col = df.columns[0]
             
-        # Drop baris NaN akibat shifting
-        df = df.dropna()
+        feat_cols = df.columns
+        df_lags = pd.DataFrame(index=df.index)
+        df_lags['target'] = df[target_col]
         
-        X = df.drop('target', axis=1)
-        y = df['target']
+        # Buat kolom lag untuk SEMUA fitur (Multivariate)
+        for col in feat_cols:
+            for i in range(1, self.lags + 1):
+                df_lags[f'{col}_lag_{i}'] = df[col].shift(i)
+                
+        # Drop baris NaN akibat shifting
+        df_lags = df_lags.dropna()
+        
+        X = df_lags.drop('target', axis=1)
+        y = df_lags['target']
         return X, y
 
-    def train(self, series: pd.Series):
-        """Melatih model XGBoost pada data historis."""
-        X, y = self.prepare_features(series)
+    def train(self, data):
+        """Melatih model XGBoost pada data historis (multivariat/n-dimensional array/dataframe)."""
+        X, y = self.prepare_features(data)
         self.model = xgb.XGBRegressor(**self.params)
         self.model.fit(X, y)
-        print("XGBoost training complete.")
+        print("XGBoost Multivariate training complete.")
 
-    def predict(self, series: pd.Series) -> np.ndarray:
-        """Memprediksi nilai gap masa depan (Out-of-sample)."""
+    def predict(self, data) -> np.ndarray:
+        """Memprediksi nilai target masa depan (Out-of-sample) dari data validation."""
         if self.model is None:
             raise ValueError("Model must be trained before calling predict.")
             
-        X, _ = self.prepare_features(series)
-        return self.model.predict(X)
+        X, _ = self.prepare_features(data)
+        return self.model.predict(X).reshape(-1, 1)
 
-    def predict_future(self, last_data: pd.Series, steps: int = 4) -> np.ndarray:
-        """Prediksi masa depan secara sekuensial (Autoregressive)."""
+    def predict_future(self, current_data, steps: int = 4, scenario_macro: np.ndarray = None) -> np.ndarray:
+        """
+        Prediksi masa depan secara sekuensial (Autoregressive) untuk Multivariat.
+        current_data: DataFrame / Array (window_size >= lags, num_features)
+        scenario_macro: Array (steps, num_features - 1) untuk makro asumsi ke depan.
+        """
         if self.model is None:
             raise ValueError("Model must be trained before forecasting.")
 
-        current_data = last_data.tolist()
+        if isinstance(current_data, pd.DataFrame) or isinstance(current_data, pd.Series):
+            curr_seq = current_data.values.copy()
+        else:
+            curr_seq = current_data.copy()
+            
+        if len(curr_seq.shape) == 1:
+            curr_seq = curr_seq.reshape(-1, 1)
+            
+        num_features = curr_seq.shape[1]
         future_preds = []
         
-        for _ in range(steps):
-            # Ambil 'lags' data terakhir untuk fitur
-            X_input = np.array(current_data[-self.lags:])[::-1].reshape(1, -1)
-            # Sesuai urutan lag_1, lag_2, lag_3, lag_4 di prepare_features
-            # Jika prepare_features pakai lag_1=t-1, lag_2=t-2... maka X_input: [t-1, t-2, t-3, t-4]
-            # np.array(current_data[-4:])[::-1] -> [last, last-1, last-2, last-3] => [t-1, t-2, t-3, t-4]
+        for i in range(steps):
+            # Extract features according to the prepare_features looping order:
+            # for col in feat_cols: 
+            #    for lag in 1 to self.lags:
+            row = []
+            for col_idx in range(num_features):
+                for lag in range(1, self.lags + 1):
+                    # curr_seq[-lag] artinya ambil baris ke (total_baris - lag)
+                    row.append(curr_seq[-lag, col_idx])
             
-            # Predict
+            X_input = np.array(row).reshape(1, -1)
+            
             pred = self.model.predict(X_input)[0]
             future_preds.append(pred)
-            current_data.append(pred)
+            
+            # Prepare next timestep feature vector
+            if scenario_macro is not None and i < len(scenario_macro):
+                next_macro = scenario_macro[i]
+            else:
+                next_macro = curr_seq[-1, 1:] # If Univariate this is empty array, which is fine
+                
+            next_feat = np.concatenate([[pred], next_macro]).reshape(1, -1)
+            curr_seq = np.vstack((curr_seq, next_feat))
             
         return np.array(future_preds).reshape(-1, 1)
 
@@ -85,3 +122,4 @@ class XGBForecaster:
         """Muat kembali model dari JSON."""
         self.model = xgb.XGBRegressor()
         self.model.load_model(path)
+

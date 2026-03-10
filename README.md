@@ -1,50 +1,43 @@
-# Analisis Prediktif Credit-to-GDP Gap: Pendekatan Multi-Model
+# Trinitas Prediksi & Quadrilateral Model: Outlook Makroprudensial
 
-Proyek ini mengeksplorasi penggunaan kecerdasan buatan dan statistika lanjut untuk memodelkan indikator stabilitas keuangan paling krusial bagi regulator: **Credit-to-GDP Gap**. 
-
-Sistem ini dirancang bukan hanya untuk memprediksi angka, tetapi juga memahami "napas" siklus ekonomi melalui tiga lensa algoritma yang berbeda.
+Proyek ini mengeksplorasi penggunaan kecerdasan buatan dan statistika lanjut untuk memantau stabilitas keuangan melalui indikator **Credit-to-GDP Gap** Indonesia dengan pendekatan multi-variabel terintegrasi.
 
 ---
 
-## 🧭 Metodologi Dasar: Memisahkan Tren dari Spekulasi
+## 🧭 Metodologi Dasar: Trinitas Prediksi
+Sistem ini memproses tiga pilar data makroekonomi utama untuk sinkronisasi kebijakan:
+-   **Total Kredit**: Volume penyaluran perbankan (IDR).
+-   **PDB Riil**: Indikator pertumbuhan ekonomi riil.
+-   **Interest Rate**: Suku bunga sebagai katalis biaya modal dan transmisi kebijakan.
 
-Sebelum peramalan dilakukan, data mentah harus melalui proses **Hodrick-Prescott (HP) Filter**. Dalam dunia filtrasi makroekonomi (Standar Basel III), ini adalah langkah vital untuk:
--   **Tren**: Mengidentifikasi pertumbuhan ekonomi yang fundamental dan sehat.
--   **Gap**: Mengekstrak penyimpangan (anomali) yang seringkali menjadi tanda awal dari penumpukan risiko sistemik.
-Dengan $\lambda = 400.000$, sistem ini memastikan rujukan yang stabil untuk data kuartalan Indonesia.
-
----
-
-## 🧠 Mesin Peramalan: Tiga Pilar Kecerdasan
-
-Sistem ini tidak bergantung pada satu opini tunggal. Kami mengintegrasikan tiga model dengan karakteristik unik:
-
-### 1. LSTM with Attention (The Intelligent Memory)
-Ini adalah "otak" utama sistem yang dibangun menggunakan *Deep Learning* (PyTorch).
--   **Mengapa LSTM?**: Data keuangan memiliki ingatan jangka panjang. LSTM mampu mengingat pola krisis masa lalu yang mungkin berulang puluhan kuartal kemudian.
--   **Kekuatan Attention**: Tidak semua data masa lalu sama pentingnya. Mekanisme *Attention* memungkinkan model untuk memberikan bobot lebih pada periode-periode volatil (seperti krisis 2008 atau pandemi) saat memprediksi masa depan, sehingga hasil peramalan lebih adaptif terhadap syok ekonomi.
-
-### 2. ARIMA (The Statistical Foundation)
-Model statistik klasik yang bertindak sebagai "jangkar" stabilitas.
--   **Peran**: ARIMA memastikan bahwa prediksi tetap berpijak pada momentum jangka pendek yang logis. Jika model AI terlalu agresif, ARIMA memberikan rujukan linear yang membantu menjaga akurasi tetap realistis.
-
-### 3. XGBoost (The Pattern Matcher)
-Algoritma *Gradient Boosting* yang sangat efisien dalam memetakan hubungan non-linier antara fitur-fitur masa kini.
--   **Peran**: XGBoost sangat baik dalam menangkap interaksi rumit antar variabel lag (jeda waktu). Ia berfungsi sebagai pembanding presisi tinggi untuk melihat apakah ada pola tabular tertentu yang terlewatkan oleh model sekuensial.
+Data diproses menggunakan **Hodrick-Prescott (HP) Filter** (Standar Basel III) untuk memisahkan tren fundamental dari gap siklikal.
 
 ---
 
-## 📊 Sinergi Pengambilan Keputusan
+## 🧠 Mesin Peramalan: Quadrilateral Prediction System
+Sistem mengintegrasikan empat model (Quadrilateral) untuk memberikan pandangan komprehensif:
 
-Hasil akhir dari sistem ini adalah konsensus. Ketika ketiga model menunjukkan arah yang sama (misal: tren mendaki yang tajam), sistem akan memicu sinyal **Peringatan Dini**. 
+![Quadrilateral Evaluation](results/comparative_evaluation_plot.png)
 
-Pemisahan antara "Kebenaran Statistik" (ARIMA), "Kecerdasan Sekuensial" (LSTM), dan "Efisiensi Pola" (XGBoost) memberikan pandangan 360 derajat bagi regulator untuk menentukan kebijakan makroprudensial yang lebih tepat sasaran.
+1. **LSTM (Attention-based Deep Learning)**: Menangkap memori jangka panjang dan dinamika volatilitas.
+2. **XGBoost (Non-Linear Pattern)**: Presisi tinggi dalam mendeteksi hubungan antar-variabel makro.
+3. **ARIMA (Statistical Baseline)**: Jangkar statistik linear untuk tren jangka menengah.
+4. **Ensemble (Hybrid Engine)**: Menggabungkan kekuatan LSTM dan XGBoost untuk hasil peramalan yang paling reliabel.
 
 ---
 
-## 🖥️ Ringkasan Teknis (Bagi Pengembang)
+## 📊 Dashboard Early Warning Indicator (EWI)
+Output sistem disajikan dalam dashboard yang mendukung:
 
-Jika Anda ingin mendalami implementasi kodenya:
--   **Engine**: Python 3.14 + PyTorch (Deep Learning).
--   **Workflow**: Jalankan `src/main.py` untuk memulai orkestrasi pipeline lengkap.
--   **Struktur**: Terbagi dalam modul `data_loader` (data), `preprocessing` (HP Filter), dan modul spesifik untuk masing-masing model di dalam folder `src/`.
+![Outlook 2026 Fan Chart](results/outlook_2026_fan_chart.png)
+
+-   **Monitoring Transisi**: Mendeteksi kecepatan pemulihan dari zona *deep under-trend*.
+-   **Sinyal Kebijakan**: Indikator lampu lalu lintas untuk mendeteksi penumpukan risiko sistemik atau ruang ekspansi kredit.
+
+---
+
+## 🖥️ Ringkasan Teknis
+-   **Engine**: Python 3.14 + PyTorch.
+-   **Workflow**: Pipeline orkestrasi melalui `src/main.py`.
+-   **Visuals**: Aset resolusi tinggi (300 DPI) di direktori `results/`.
+

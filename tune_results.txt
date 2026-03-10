@@ -1,0 +1,37 @@
+[I 2026-03-02 18:43:09,091] Using an existing study with name 'lstm_optimization' instead of creating a new one.
+[I 2026-03-02 18:43:10,617] Trial 20 finished with value: 0.20978471819331143 and parameters: {'hidden_size': 72, 'num_layers': 2, 'learning_rate': 0.009719559966333006, 'dropout': 0.4493352844419293}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:11,227] Trial 21 finished with value: 0.256378446149503 and parameters: {'hidden_size': 71, 'num_layers': 2, 'learning_rate': 0.009870504788972608, 'dropout': 0.4411061701133901}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:11,964] Trial 22 finished with value: 0.28298257693850376 and parameters: {'hidden_size': 86, 'num_layers': 3, 'learning_rate': 0.003140425292545703, 'dropout': 0.46321230362120835}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:12,242] Trial 23 finished with value: 0.2519553306407465 and parameters: {'hidden_size': 50, 'num_layers': 1, 'learning_rate': 0.006427264816009989, 'dropout': 0.4077827789796384}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:12,832] Trial 24 finished with value: 0.26162419905859247 and parameters: {'hidden_size': 65, 'num_layers': 2, 'learning_rate': 0.00674760148202648, 'dropout': 0.45389071090879896}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:13,175] Trial 25 finished with value: 0.26660930536259403 and parameters: {'hidden_size': 85, 'num_layers': 1, 'learning_rate': 0.0027826674309208745, 'dropout': 0.4992828821875325}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:13,757] Trial 26 finished with value: 0.27978012858204243 and parameters: {'hidden_size': 103, 'num_layers': 2, 'learning_rate': 0.009848772777332192, 'dropout': 0.3555494406746363}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:14,051] Trial 27 finished with value: 0.26885387432872215 and parameters: {'hidden_size': 68, 'num_layers': 1, 'learning_rate': 0.0013619910404754263, 'dropout': 0.40980584419266963}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:14,638] Trial 28 finished with value: 0.24177588858234075 and parameters: {'hidden_size': 121, 'num_layers': 2, 'learning_rate': 0.004489282478882683, 'dropout': 0.3055535289246294}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:15,287] Trial 29 finished with value: 0.28953669317554664 and parameters: {'hidden_size': 89, 'num_layers': 3, 'learning_rate': 0.005392899122895564, 'dropout': 0.39171914446669326}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:15,602] Trial 30 finished with value: 0.1944534553554553 and parameters: {'hidden_size': 77, 'num_layers': 1, 'learning_rate': 0.007756193471208229, 'dropout': 0.42610445392917734}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:15,915] Trial 31 finished with value: 0.2004275098997286 and parameters: {'hidden_size': 76, 'num_layers': 1, 'learning_rate': 0.007859239732054359, 'dropout': 0.4277124127158892}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:16,224] Trial 32 finished with value: 0.23121855540957867 and parameters: {'hidden_size': 79, 'num_layers': 1, 'learning_rate': 0.007204010901968471, 'dropout': 0.42566120213598113}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:16,708] Trial 33 finished with value: 0.4375716556432887 and parameters: {'hidden_size': 78, 'num_layers': 1, 'learning_rate': 0.0003898142118194273, 'dropout': 0.3550892928751238}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:17,102] Trial 34 finished with value: 0.27225304812338363 and parameters: {'hidden_size': 36, 'num_layers': 1, 'learning_rate': 0.0038702700940404467, 'dropout': 0.389080571368902}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:17,409] Trial 35 finished with value: 0.24219820129489625 and parameters: {'hidden_size': 57, 'num_layers': 1, 'learning_rate': 0.0076523238803172305, 'dropout': 0.4672473222720418}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:17,768] Trial 36 finished with value: 0.21482224444446782 and parameters: {'hidden_size': 107, 'num_layers': 1, 'learning_rate': 0.0057367551001901934, 'dropout': 0.3691500789840767}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:18,084] Trial 37 finished with value: 0.2527427244935588 and parameters: {'hidden_size': 91, 'num_layers': 1, 'learning_rate': 0.002726551063276823, 'dropout': 0.48695704146197344}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:18,417] Trial 38 finished with value: 0.199854233520821 and parameters: {'hidden_size': 102, 'num_layers': 1, 'learning_rate': 0.008043210140346174, 'dropout': 0.27139097579456506}. Best is trial 12 with value: 0.18604030141407835.
+[I 2026-03-02 18:43:18,707] Trial 39 finished with value: 0.22017873536433755 and parameters: {'hidden_size': 105, 'num_layers': 1, 'learning_rate': 0.0076230975348466155, 'dropout': 0.268677537136579}. Best is trial 12 with value: 0.18604030141407835.
+============================================================
+ LSTM HYPERPARAMETER TUNING - OPTUNA 
+============================================================
+Starting 20 trials of Bayesian Optimization...
+Best trial: 0.18604030141407835
+Best params: {'hidden_size': 88, 'num_layers': 1, 'learning_rate': 0.008632814885841328, 'dropout': 0.4626231943678488}
+
+----------------------------------------
+ BEST CONFIGURATION FOUND 
+----------------------------------------
+ Value (RMSE): 0.186040
+     hidden_size: 88
+      num_layers: 1
+   learning_rate: 0.008632814885841328
+         dropout: 0.4626231943678488
+============================================================

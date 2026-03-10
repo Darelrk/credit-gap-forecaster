@@ -1,44 +1,44 @@
-# Trinitas Prediksi & Quadrilateral Model: Outlook Makroprudensial
+# Trinitas Forecast & Quadrilateral Model: Macroprudential Outlook
 
-Proyek ini mengeksplorasi penggunaan kecerdasan buatan dan statistika lanjut untuk memantau stabilitas keuangan melalui indikator **Credit-to-GDP Gap** Indonesia dengan pendekatan multi-variabel terintegrasi.
-
----
-
-## 🧭 Metodologi Dasar: Trinitas Prediksi
-Sistem ini memproses tiga pilar data makroekonomi utama untuk sinkronisasi kebijakan:
--   **Total Kredit**: Volume penyaluran perbankan (IDR).
--   **PDB Riil**: Indikator pertumbuhan ekonomi riil.
--   **Interest Rate**: Suku bunga sebagai katalis biaya modal dan transmisi kebijakan.
-
-Data diproses menggunakan **Hodrick-Prescott (HP) Filter** (Standar Basel III) untuk memisahkan tren fundamental dari gap siklikal.
+This project explores the use of artificial intelligence and advanced statistics to monitor financial stability through Indonesia's **Credit-to-GDP Gap** indicator using an integrated multi-variable approach.
 
 ---
 
-## 🧠 Mesin Peramalan: Quadrilateral Prediction System
-Sistem mengintegrasikan empat model (Quadrilateral) untuk memberikan pandangan komprehensif:
+## 🧭 Core Methodology: Trinitas Forecast
+The system processes three key macroeconomic pillars for policy synchronization:
+-   **Total Credit**: Banking lending volume (IDR).
+-   **Real GDP**: Indicator of real economic growth.
+-   **Interest Rate**: Catalyst for capital cost and policy transmission.
+
+Data is processed using the **Hodrick-Prescott (HP) Filter** (Basel III Standard) to separate fundamental trends from cyclical gaps.
+
+---
+
+## 🧠 Forecasting Engine: Quadrilateral Prediction System
+The system integrates four models (Quadrilateral) to provide a comprehensive view:
 
 ![Quadrilateral Evaluation](results/comparative_evaluation_plot.png)
 
-1. **LSTM (Attention-based Deep Learning)**: Menangkap memori jangka panjang dan dinamika volatilitas.
-2. **XGBoost (Non-Linear Pattern)**: Presisi tinggi dalam mendeteksi hubungan antar-variabel makro.
-3. **ARIMA (Statistical Baseline)**: Jangkar statistik linear untuk tren jangka menengah.
-4. **Ensemble (Hybrid Engine)**: Menggabungkan kekuatan LSTM dan XGBoost untuk hasil peramalan yang paling reliabel.
+1. **LSTM (Attention-based Deep Learning)**: Captures long-term memory and volatility dynamics.
+2. **XGBoost (Non-Linear Pattern)**: High precision in detecting relationships between macro-variables.
+3. **ARIMA (Statistical Baseline)**: Linear statistical anchor for medium-term trends.
+4. **Ensemble (Hybrid Engine)**: Combines the strengths of LSTM and XGBoost for the most reliable forecasting results.
 
 ---
 
-## 📊 Dashboard Early Warning Indicator (EWI)
-Output sistem disajikan dalam dashboard yang mendukung:
+## 📊 Early Warning Indicator (EWI) Dashboard
+System output is presented in a dashboard that supports:
 
 ![Outlook 2026 Fan Chart](results/outlook_2026_fan_chart.png)
 
--   **Monitoring Transisi**: Mendeteksi kecepatan pemulihan dari zona *deep under-trend*.
--   **Sinyal Kebijakan**: Indikator lampu lalu lintas untuk mendeteksi penumpukan risiko sistemik atau ruang ekspansi kredit.
+-   **Transition Monitoring**: Detects the speed of recovery from deep under-trend zones.
+-   **Policy Signals**: Traffic light indicators to detect systemic risk build-up or credit expansion space.
 
 ---
 
-## 🖥️ Ringkasan Teknis
+## 🖥️ Technical Summary
 -   **Engine**: Python 3.14 + PyTorch.
--   **Workflow**: Pipeline orkestrasi melalui `src/main.py`.
--   **Visuals**: Aset resolusi tinggi (300 DPI) di direktori `results/`.
+-   **Workflow**: Pipeline orchestration via `src/main.py`.
+-   **Visuals**: High-resolution assets (300 DPI) in the `results/` directory.
 
 

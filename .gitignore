@@ -1,3 +1,7 @@
 # Presentation materials (Local only)
 PPT.md
 results/ppt_assets/
+
+# Output and Log files
+*.txt
+!requirements.txt
